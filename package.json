@@ -1,0 +1,40 @@
+{
+  "name": "pulse-trade",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "build:wasm": "asc --config wasm/asconfig.json",
+    "prestart": "npm run build:wasm",
+    "start": "ng serve",
+    "prebuild": "npm run build:wasm",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "pretest": "npm run build:wasm",
+    "test": "ng test --watch=false && npm run test:wasm",
+    "test:app": "ng test",
+    "test:wasm": "vitest run --root wasm"
+  },
+  "private": true,
+  "packageManager": "npm@11.12.1",
+  "dependencies": {
+    "@angular/common": "^22.0.0",
+    "@angular/compiler": "^22.0.0",
+    "@angular/core": "^22.0.0",
+    "@angular/forms": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.0.0",
+    "@angular/cli": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.0",
+    "@types/node": "^24.19.2",
+    "assemblyscript": "^0.28.20",
+    "jsdom": "^28.0.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^4.0.8"
+  }
+}

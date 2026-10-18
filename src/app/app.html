@@ -1,0 +1,17 @@
+<header class="header">
+  <div class="brand">
+    <span class="logo" aria-hidden="true">◆</span>
+    <span>PulseTrade</span>
+  </div>
+  <nav class="nav" aria-label="Main">
+    <a routerLink="/dashboard" routerLinkActive="active" ariaCurrentWhenActive="page">Dashboard</a>
+    <a routerLink="/settings" routerLinkActive="active" ariaCurrentWhenActive="page">Settings</a>
+  </nav>
+  <span class="badge" [class]="'badge--' + producer.status()" data-testid="header-status">
+    {{ producer.status() }}
+  </span>
+</header>
+
+<main class="main">
+  <router-outlet />
+</main>

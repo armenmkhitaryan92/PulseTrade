@@ -1,0 +1,63 @@
+<form [formGroup]="form" (ngSubmit)="apply()" novalidate class="form">
+  @for (field of fields; track field.key) {
+    <div class="field">
+      <label [for]="field.key">{{ field.label }}</label>
+
+      <div class="input-row">
+        <input
+          type="number"
+          step="1"
+          inputmode="numeric"
+          [id]="field.key"
+          [formControlName]="field.key"
+          [min]="limits[field.key].min"
+          [max]="limits[field.key].max"
+          [attr.aria-invalid]="errorFor(field.key) ? true : null"
+          [attr.aria-describedby]="field.key + '-help'"
+        />
+        @if (field.unit) {
+          <span class="muted">{{ field.unit }}</span>
+        }
+      </div>
+
+      <small [id]="field.key + '-help'" class="muted">
+        {{ field.description }} Allowed: {{ limits[field.key].min }}–{{ limits[field.key].max }}.
+        Active: {{ activeSettings()[field.key] }}.
+      </small>
+
+      @if (errorFor(field.key); as error) {
+        <small class="error" [attr.data-testid]="field.key + '-error'">{{ error }}</small>
+      }
+    </div>
+  }
+
+  <p class="muted" data-testid="preview">
+    @if (previewRate(); as rate) {
+      Nominal rate: {{ rate }} updates/s across all instruments.
+    } @else {
+      Fix the highlighted fields to apply.
+    }
+  </p>
+
+  <div class="actions">
+    <button
+      type="submit"
+      class="button button--primary"
+      [disabled]="form.invalid"
+      data-testid="apply"
+    >
+      Apply
+    </button>
+    <button type="button" class="button" (click)="discardChanges()" [disabled]="form.pristine">
+      Discard changes
+    </button>
+    <button type="button" class="button" (click)="resetToDefaults()">Reset to defaults</button>
+  </div>
+
+  @if (appliedRunId(); as runId) {
+    <p class="success" role="status">Applied — run #{{ runId }} started with a clean state.</p>
+  }
+  <p class="muted note">
+    Apply starts a new run: values and totals are cleared and generation starts even if paused.
+  </p>
+</form>

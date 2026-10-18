@@ -1,0 +1,11 @@
+{
+  "entries": ["./assembly/index.ts"],
+  "options": {
+    "outFile": "../public/wasm/market-producer.wasm",
+    "runtime": "stub",
+    "optimizeLevel": 3,
+    "shrinkLevel": 0,
+    "noAssert": true,
+    "use": ["abort="]
+  }
+}

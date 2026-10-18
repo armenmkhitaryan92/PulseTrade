@@ -1,0 +1,96 @@
+<section class="toolbar" aria-label="Producer controls">
+  <div class="status">
+    <span class="badge" [class]="'badge--' + producer.status()" data-testid="status">
+      {{ statusLabel() }}
+    </span>
+    <span class="muted">Run #{{ producer.runId() }}</span>
+  </div>
+
+  <button
+    type="button"
+    class="button"
+    data-testid="toggle"
+    [disabled]="!canToggle()"
+    (click)="producer.togglePause()">
+    {{ producer.status() === 'paused' ? 'Resume' : 'Pause' }}
+  </button>
+</section>
+
+@if (producer.error(); as error) {
+  <div class="alert" role="alert" data-testid="error">
+    <p>{{ error }}</p>
+    <button type="button" class="button" (click)="producer.restart()">Retry</button>
+  </div>
+}
+
+<dl class="stats" aria-label="Producer status">
+  <div>
+    <dt>Instruments</dt>
+    <dd>{{ producer.settings().instrumentCount }}</dd>
+  </div>
+
+  <div>
+    <dt>Batch</dt>
+    <dd>
+      {{ producer.settings().updatesPerBatch }} updates / {{ producer.settings().batchIntervalMs }}
+      ms
+    </dd>
+  </div>
+
+  <div>
+    <dt>Nominal rate</dt>
+    <dd>{{ summary().nominalRate }} /s</dd>
+  </div>
+
+  <div>
+    <dt>Measured rate</dt>
+    <dd>{{ summary().measuredRate }} /s</dd>
+  </div>
+
+  <div>
+    <dt>Updates</dt>
+    <dd data-testid="total-updates">{{ summary().totalUpdates }}</dd>
+  </div>
+
+  <div>
+    <dt>Batches</dt>
+    <dd>{{ summary().batches }}</dd>
+  </div>
+  <div>
+    <dt>Last batch</dt>
+    <dd>{{ summary().lastBatchMs }} ms</dd>
+  </div>
+</dl>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Instrument</th>
+        <th scope="col" class="num">Last price</th>
+        <th scope="col" class="num">Bid–ask spread</th>
+        <th scope="col" class="num">Volume</th>
+        <th scope="col" class="num">VWAP</th>
+        <th scope="col" class="num">Book imbalance</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      @for (row of rows(); track row.index) {
+        <tr data-testid="row">
+          <th scope="row">{{ row.symbol }}</th>
+          <td class="num">{{ row.lastPrice }}</td>
+          <td class="num">{{ row.spread }}</td>
+          <td class="num">{{ row.volume }}</td>
+          <td class="num">{{ row.vwap }}</td>
+          <td class="num" [class]="'imbalance--' + row.imbalanceSign">{{ row.imbalance }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<p class="muted hint">
+  Volume and VWAP are cumulative since the current run started. Change the producer on the
+  <a routerLink="/settings">Settings</a> page.
+</p>
